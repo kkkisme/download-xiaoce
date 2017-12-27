@@ -1,5 +1,6 @@
 const fs = require('fs')
 const axios = require('axios')
+const markdownpdf = require('markdown-pdf')
 const config = require('./config')
 const utils = require('./utils')
 
@@ -32,19 +33,19 @@ async function load() {
   let section = data.d.section
   for (let i = 0; (len = section.length), i < len; i++) {
     let sectionData = await getSection(section[i])
-    fs.open(
-      outputDir + '/' + sectionData.d.title + '.md',
+    let fd = fs.openSync(
+      outputDir + '/' + i + sectionData.d.title + '.md',
       'w',
-      0644,
-      (e, fd) => {
-        if (e) throw e
-        fs.writeFile(fd, sectionData.d.content, 'utf8', e => {
-          if (e) throw e
-          console.log(sectionData.d.title + ' 创建成功')
-          fs.closeSync(fd)
-        })
-      }
+      0644
     )
+    fs.writeFileSync(fd, sectionData.d.content, 'utf8')
+    console.log(sectionData.d.title + ' 下载成功')
+    fs.closeSync(fd)
+    markdownpdf()
+      .from.string(sectionData.d.content)
+      .to(outputDir + '/' + i + sectionData.d.title + '.pdf', function() {
+        console.log('Created', outputDir + '/' + i + sectionData.d.title)
+      })
   }
 }
 
