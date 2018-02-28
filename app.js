@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const axios = require('axios')
 const markdownpdf = require('markdown-pdf')
 const config = require('./config')
@@ -41,7 +42,7 @@ async function load() {
     fs.writeFileSync(fd, sectionData.d.content, 'utf8')
     console.log(sectionData.d.title + ' 下载成功')
     fs.closeSync(fd)
-    markdownpdf()
+    markdownpdf({ cssPath: path.join(__dirname, 'pdf.css') })
       .from.string(sectionData.d.content)
       .to(outputDir + '/' + i + sectionData.d.title + '.pdf', function() {
         console.log('Created', outputDir + '/' + i + sectionData.d.title)

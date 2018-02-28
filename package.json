@@ -12,6 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.17.1",
-    "markdown-pdf": "^8.1.0"
+    "markdown-pdf": "^8.1.1"
   }
 }
